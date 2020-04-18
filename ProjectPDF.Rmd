@@ -1,0 +1,101 @@
+---
+title: "Socially Determined 2020"
+subtitle: "COVID-19"
+author: "Eryk Jesse"
+date: "April 16th, 2020"
+output:
+  pdf_document:
+    highlight: haddock
+    latex_engine: xelatex
+  html_document:
+    df_print: paged
+geometry: margin = 0.5in
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{longtable}
+- \usepackage{array}
+- \usepackage{multirow}
+- \usepackage{wrapfig}
+- \usepackage{float}
+- \usepackage{colortbl}
+- \usepackage{pdflscape}
+- \usepackage{tabu}
+- \usepackage{threeparttable}
+- \usepackage{threeparttablex}
+- \usepackage[normalem]{ulem}
+- \usepackage{makecell}
+- \usepackage{xcolor}
+editor_options:
+  chunk_output_type: console
+documentclass: article
+urlcolor: blue
+---
+
+
+```{r setup, include=FALSE}
+# This is the setup chunk
+library(tidyverse)
+library(knitr)
+library(MASS)
+library(pander)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      comment = NA, # Recommended
+                      fig.path = "./figures/",  # Store all figures here in relative path (make the folder first)
+                      fig.align = "center",
+                      fig.width = 7,
+                      fig.height = 7,
+                      message = FALSE, # Turn off load messages
+                      warning = FALSE # Turn off warnings
+                      )
+setwd("C:/Users/erykj/Documents/SociallyDeterminedData/")
+```
+
+\clearpage
+\section{Introduction}
+
+\section{Description of the Data}
+
+\section{Methods}
+
+
+\newpage
+***
+&nbsp;
+
+\section{Results and Discussion}
+```{r Data, echo=FALSE}
+# Load in necessary dataset
+social_factors_c <- read.csv("social_factors_hex.csv")
+```
+
+```{r}
+eRisk <- social_factors_c %>%
+  group_by(economic_risk) %>%
+  summarise(n = n()) 
+
+fRisk <- social_factors_c %>%
+  group_by(food_risk) %>%
+  summarise(n = n())
+
+hoRisk <- social_factors_c %>%
+  group_by(housing_risk) %>%
+  summarise(n = n())
+
+prop.table(table(social_factors_c$county)) %>% pander("Percent of Counties")
+
+table1 <- social_factors_c %>%
+  group_by(county) %>%
+  summarise("min" = min(pop_density), 
+            "median" = median(pop_density),
+            "max" = max(pop_density))
+
+countyg <- social_factors_c %>%
+  group_by(county, food_risk) %>%
+  summarise(n = n()) %>%
+  mutate(percentage = n / sum(n))
+
+
+```
+
+
